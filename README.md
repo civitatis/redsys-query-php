@@ -8,7 +8,10 @@ The spanish documentation is located in 'Consultas SOAP HMAC SHA256 2.5', in roo
 
 ## Installation
 
-@TODO
+Use composer:
+```bash
+composer require mistermoper/redsys-query-php
+```
 
 ## Examples
 
