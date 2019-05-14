@@ -6,6 +6,8 @@ This is used into webservice located in /apl02/services/SerClsWSConsulta.
 
 The spanish documentation is located in 'Consultas SOAP HMAC SHA256 2.5', in root folder.
 
+@IMPORTANT: Right now, the only service covered by this library is 'Transacción Simple'.
+
 ## Installation
 
 Use composer:
@@ -15,7 +17,7 @@ composer require mistermoper/redsys-query-php
 
 ## Examples
 
-### Get transactions
+### Get single transaction
 This service allows get the redsys transactions by id. 
 
 Example (also available in examples/get_transaction.php:
