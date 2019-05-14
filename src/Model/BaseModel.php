@@ -1,12 +1,14 @@
 <?php
 
-
 namespace RedsysConsultasPHP\Model;
 
-
+/**
+ * Base model for a redsys response.
+ *
+ * @package RedsysConsultasPHP\Model
+ */
 class BaseModel
 {
-
     protected $Ds_MerchantCode;
     protected $Ds_Terminal;
     protected $Ds_Order;
@@ -194,5 +196,4 @@ class BaseModel
     {
         $this->Ds_Response = $Ds_Response;
     }
-
 }
