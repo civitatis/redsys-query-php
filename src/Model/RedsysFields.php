@@ -1,13 +1,25 @@
 <?php
 
-
 namespace RedsysConsultasPHP\Model;
 
-
+/**
+ * List of redsys fields.
+ *
+ * This is used to make a field mapping when creating a model from a xml response.
+ *
+ * @package RedsysConsultasPHP\Model
+ */
 final class RedsysFields
 {
 
-    public static function getList() {
+    /**
+     * Redsys field names.
+     *
+     * @return array
+     *   [Ds_terminal, Ds_date...]
+     */
+    public static function getList()
+    {
         return [
             'Ds_MerchantCode',
             'Ds_Terminal',
@@ -22,5 +34,4 @@ final class RedsysFields
             'Ds_Response',
         ];
     }
-
 }

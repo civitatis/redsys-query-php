@@ -19,18 +19,18 @@ class SignatureGenerator
    *
    * @param int $ds_order
    *   Purchase order number of the operation.
-   * @param string $ds_merchant_code
+   * @param string $trade_key
    *   Trade key.
    *
    * @return bool|string
    *   Specific key for the operation.
    */
-	public function encrypt($ds_order, $ds_merchant_code)
+    public function encrypt($ds_order, $trade_key)
     {
-        $key = base64_decode($ds_merchant_code);
-		$l = ceil(strlen($ds_order) / 8) * 8;
-		return substr(openssl_encrypt($ds_order . str_repeat("\0", $l - strlen($ds_order)), 'des-ede3-cbc', $key, OPENSSL_RAW_DATA, "\0\0\0\0\0\0\0\0"), 0, $l);
-	}
+        $key = base64_decode($trade_key);
+        $l = ceil(strlen($ds_order) / 8) * 8;
+        return substr(openssl_encrypt($ds_order . str_repeat("\0", $l - strlen($ds_order)), 'des-ede3-cbc', $key, OPENSSL_RAW_DATA, "\0\0\0\0\0\0\0\0"), 0, $l);
+    }
 
     /**
     * Calculate HMAC SHA256 of <Version> element.
@@ -49,11 +49,11 @@ class SignatureGenerator
     * @see SignatureGenerator::encrypt()
     *
     */
-	public function hash($version, $key)
+    public function hash($version, $key)
     {
-		$res = hash_hmac('sha256', $version, $key, true);
-		return $res;
-	}
+        $res = hash_hmac('sha256', $version, $key, true);
+        return $res;
+    }
 
     /**
     * Signature Calculation.
@@ -62,19 +62,18 @@ class SignatureGenerator
      *   Version element from xml. Example: <Version Ds_Version="0.0">...</Version>.
     * @param string $ds_order
     *   Order number
-    * @param $ds_merchant_code
+    * @param $trade_key
     *   Trade key.
     *
     * @return string
     *   Encoding result. It will be the value for element <Ds_Signature>.
     */
-	public function createMerchantSignatureHostToHost($version, $ds_order, $ds_merchant_code)
+    public function createMerchantSignatureHostToHost($version, $ds_order, $trade_key)
     {
-		$key = $this->encrypt($ds_order, $ds_merchant_code);
+        $key = $this->encrypt($ds_order, $trade_key);
 
-		$res = $this->hash($version, $key);
+        $res = $this->hash($version, $key);
 
-		return base64_encode($res);
-	}
-
+        return base64_encode($res);
+    }
 }

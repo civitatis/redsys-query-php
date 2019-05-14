@@ -7,22 +7,57 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\RequestOptions;
 use RedsysConsultasPHP\Model\Transaction;
 
-
+/**
+ * Client to make queries to redsys query webservice.
+ *
+ * @package RedsysConsultasPHP\Client
+ */
 class Client extends GuzzleClient
 {
+    /**
+     * Url of redsys test environment.
+     */
     const WEBSERVICE_URL_TESTING = 'https://sis-t.redsys.es:25443/apl02/services/SerClsWSConsulta';
 
+    /**
+     * Webservice URL.
+     *
+     * @var string
+     */
     protected $webserviceUrl;
+
+    /**
+     * Request generator.
+     *
+     * @var RequestGenerator
+     */
     protected $requestGenerator;
 
-    public function __construct($webservice_url, $ds_merchant_code, array $config = [])
+    /**
+     * Client constructor.
+     *
+     * @param string $webservice_url
+     *   Webservice url.
+     * @param string $trade_key
+     *   Trade key.
+     * @param array $config
+     *   Configuration.
+     */
+    public function __construct($webservice_url, $trade_key, array $config = [])
     {
         $this->webserviceUrl = $webservice_url;
-        $this->requestGenerator = new RequestGenerator($ds_merchant_code);
+        $this->requestGenerator = new RequestGenerator($trade_key);
         parent::__construct($config);
     }
 
-    protected function defaultHeaders() {
+    /**
+     * This headers will be sent on every request.
+     *
+     * @return array
+     *   List of headers, beng the most important 'SOAPAction'.
+     */
+    protected function defaultHeaders()
+    {
         return [
             'Content-type' => 'text/xml;charset=utf-8',
             'Accept' => ' text/xml',
@@ -32,25 +67,45 @@ class Client extends GuzzleClient
         ];
     }
 
-    public function getTransaction($order_id, $terminal, $merchant_code, $transaction_type = 0) {
-        $payload = $this->buildSoapBody($this->requestGenerator->transaction($order_id, $terminal, $merchant_code, $transaction_type));
+    /**
+     * Get a transaction.
+     *
+     * @param int $order_id
+     *   Order id.
+     * @param $terminal
+     *   Terminal.
+     * @param $merchant_code
+     *   Merchant code.
+     * @param int $transaction_type
+     *   Transaction type.
+     *
+     * @return Transaction
+     *   Transaction.
+     */
+    public function getTransaction($order_id, $terminal, $merchant_code, $transaction_type = 0)
+    {
+        $payload = $this->buildPayload($this->requestGenerator->transaction($order_id, $terminal, $merchant_code, $transaction_type));
         $response = $this->doRequest($payload);
         return Transaction::fromXml($response);
     }
 
     /**
+     * Do request to webservice.
+     *
      * @param $payload
+     *   Payload.
+     *
      * @return mixed|\Psr\Http\Message\ResponseInterface
      *   Response.
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     *   Exception if payload data is not okay.
+     * @throws \Exception
      */
-    private function doRequest($payload) {
+    private function doRequest($payload)
+    {
         $headers = $this->defaultHeaders() + [
             'Content-length' => strlen($payload),
         ];
-        try  {
+        try {
             $response = $this->post($this->webserviceUrl, [RequestOptions::HEADERS => $headers, RequestOptions::BODY => $payload]);
             $response = ResponseParser::parse($response);
             if (count($response->xpath('//Messages/Version/Message/ErrorMsg/Ds_ErrorCode')) == 1) {
@@ -58,21 +113,30 @@ class Client extends GuzzleClient
                 // @TODO: wrap response into an exception class to show every exception code!
                 throw new \Exception('Error ' . $error_code);
             }
-        }
-        catch (RequestException $e) {
-            $response = NULL;
+        } catch (RequestException $e) {
+            $response = null;
         }
         return $response;
     }
 
-    protected function buildSoapBody($input) {
+    /**
+     * Transform the xml payload we will send to webservice into a soap request.
+     *
+     * @param string $payload
+     *   Soap request payload.
+     *
+     * @return string
+     *   Soap full payload.
+     */
+    protected function buildPayload($payload)
+    {
         $soap_request  = "<?xml version=\"1.0\"?>\n";
         $soap_request .= '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://webservices.apl02.redsys.es">';
         $soap_request .= '<soapenv:Header/>';
         $soap_request .= '<soapenv:Body>';
         $soap_request .= '<web:consultaOperaciones>';
         $soap_request .= '<cadenaXML>';
-        $soap_request .= '<![CDATA['.$input.']]>';
+        $soap_request .= '<![CDATA['.$payload.']]>';
         $soap_request .= '</cadenaXML>';
         $soap_request .= '</web:consultaOperaciones>';
         $soap_request .= '</soapenv:Body>';
@@ -80,5 +144,4 @@ class Client extends GuzzleClient
 
         return $soap_request;
     }
-
 }
