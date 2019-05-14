@@ -1,10 +1,10 @@
 # Redsys query PHP
 
-Allow query order transactions into redsys.
+Allow query order transactions done into spanish gateway banks that uses Sermepa/Redsys.
 
 This is used into webservice located in /apl02/services/SerClsWSConsulta.
 
-The documentation is located in 'Consultas SOAP HMAC SHA256 2.5', in root folder.
+The spanish documentation is located in 'Consultas SOAP HMAC SHA256 2.5', in root folder.
 
 ## Installation
 
