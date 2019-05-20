@@ -1,5 +1,5 @@
 {
-    "name": "mistermoper/redsys-consultas-php",
+    "name": "metadrop/redsys-consultas-php",
     "description": "Permite consultar al servicio de consulta de transacciones de Redsys",
     "type": "library",
     "require": {
