@@ -86,7 +86,7 @@ class Client extends GuzzleClient
     {
         $payload = $this->buildPayload($this->requestGenerator->transaction($order_id, $terminal, $merchant_code, $transaction_type));
         $response = $this->doRequest($payload);
-        return Transaction::fromXml($response);
+        return !empty($response) ? Transaction::fromXml($response) : NULL;
     }
 
     /**
