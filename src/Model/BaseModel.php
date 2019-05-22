@@ -196,4 +196,20 @@ class BaseModel
     {
         $this->Ds_Response = $Ds_Response;
     }
+
+    /**
+     * @return mixed
+     */
+    public function toArray()
+    {
+        $values = [];
+        foreach (RedsysFields::getList() as $field) {
+            $field_getter_method = 'get' . str_replace('_', '', $field);
+            if (method_exists($this, $field_getter_method)) {
+              $values[$field] = $this->{$field_getter_method}();
+            }
+        }
+        return $values;
+    }
+
 }
