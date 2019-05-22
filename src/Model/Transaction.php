@@ -37,7 +37,7 @@ class Transaction extends BaseModel
         foreach (RedsysFields::getList() as $field) {
             $field_setter_method = 'set' . str_replace('_', '', $field);
             if (method_exists($transaction, $field_setter_method) && isset($transaction_xml->{$field})) {
-              $transaction->{$field_setter_method}((string) $transaction_xml->{$field});
+                $transaction->{$field_setter_method}((string) $transaction_xml->{$field});
             }
         }
 
