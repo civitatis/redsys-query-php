@@ -198,7 +198,10 @@ class BaseModel
     }
 
     /**
-     * @return mixed
+     * Returns the object as an array.
+     *
+     * @return array
+     *   Object as an array.
      */
     public function toArray()
     {
