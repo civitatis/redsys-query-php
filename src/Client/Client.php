@@ -89,6 +89,23 @@ class Client extends GuzzleClient
         return !empty($response) ? Transaction::fromXml($response) : NULL;
     }
 
+
+    /**
+     * Do a MonitorMasiva request
+     * @param $fecha_inicio string Fecha de inicio
+     * @param $fecha_fin string Fecha de fin
+     * @param $terminal string Número de terminal
+     * @param $merchant_code string Código de comercio
+     * @return Transaction|null
+     * @throws \Exception
+     */
+    public function getMonitorMasiva($fecha_inicio, $fecha_fin, $terminal, $merchant_code)
+    {
+        $payload = $this->buildPayload($this->requestGenerator->monitorMasiva($fecha_inicio, $fecha_fin, "7086YlQL", $terminal, $merchant_code));
+        $response = $this->doRequest($payload);
+        return !empty($response) ? Transaction::fromXml($response) : NULL;
+    }
+
     /**
      * Do request to webservice.
      *
