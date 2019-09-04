@@ -6,8 +6,6 @@ This is used into webservice located in /apl02/services/SerClsWSConsulta.
 
 The spanish documentation is located in 'Consultas SOAP HMAC SHA256 2.5', in root folder.
 
-@IMPORTANT: Right now, the only service covered by this library is 'Transacción Simple'.
-
 ## Installation
 
 Use composer:
