@@ -73,9 +73,9 @@ class Transaction extends BaseModel
                 $field_setter_method = 'set' . str_replace('_', '', $field);
                 if (method_exists($transaction_individual, $field_setter_method) && isset($transaction_xml->{$field})) {
                     $transaction_individual->{$field_setter_method}((string) $transaction_xml->{$field});
-                    $transaction[] = $transaction_individual;
                 }
             }
+            $transaction[] = $transaction_individual;
         }
 
         return $transaction;
